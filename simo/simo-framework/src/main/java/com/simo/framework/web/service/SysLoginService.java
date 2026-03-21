@@ -79,6 +79,7 @@ public class SysLoginService
         {
             if (e instanceof BadCredentialsException)
             {
+                //修改日志
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
                 throw new UserPasswordNotMatchException();
             }

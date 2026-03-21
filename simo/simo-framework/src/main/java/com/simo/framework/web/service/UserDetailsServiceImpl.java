@@ -54,8 +54,9 @@ public class UserDetailsServiceImpl implements UserDetailsService
             throw new ServiceException(MessageUtils.message("user.blocked"));
         }
 
+        //密码校验，这里主要是看用户在短时间内输错了多少次密码，防止过分重复登录
         passwordService.validate(user);
-
+        //将用户信息封装成我们自定义的LoginUser对象，他是UserDetails的实现类
         return createLoginUser(user);
     }
 
