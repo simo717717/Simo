@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simo.gallery.mapper.BizAlbumPhotoMapper">
+    
+    <resultMap type="BizAlbumPhoto" id="BizAlbumPhotoResult">
+        <result property="albumId"    column="album_id"    />
+        <result property="photoId"    column="photo_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectBizAlbumPhotoVo">
+        select album_id, photo_id, create_time from biz_album_photo
+    </sql>
+
+    <select id="selectBizAlbumPhotoList" parameterType="BizAlbumPhoto" resultMap="BizAlbumPhotoResult">
+        <include refid="selectBizAlbumPhotoVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectBizAlbumPhotoByAlbumId" parameterType="Long" resultMap="BizAlbumPhotoResult">
+        <include refid="selectBizAlbumPhotoVo"/>
+        where album_id = #{albumId}
+    </select>
+
+    <insert id="insertBizAlbumPhoto" parameterType="BizAlbumPhoto">
+        insert into biz_album_photo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="albumId != null">album_id,</if>
+            <if test="photoId != null">photo_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="albumId != null">#{albumId},</if>
+            <if test="photoId != null">#{photoId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBizAlbumPhoto" parameterType="BizAlbumPhoto">
+        update biz_album_photo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="photoId != null">photo_id = #{photoId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where album_id = #{albumId}
+    </update>
+
+    <delete id="deleteBizAlbumPhotoByAlbumId" parameterType="Long">
+        delete from biz_album_photo where album_id = #{albumId}
+    </delete>
+
+    <delete id="deleteBizAlbumPhotoByAlbumIds" parameterType="String">
+        delete from biz_album_photo where album_id in 
+        <foreach item="albumId" collection="array" open="(" separator="," close=")">
+            #{albumId}
+        </foreach>
+    </delete>
+</mapper>

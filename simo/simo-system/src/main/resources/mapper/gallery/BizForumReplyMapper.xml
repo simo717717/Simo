@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simo.gallery.mapper.BizForumReplyMapper">
+    
+    <resultMap type="BizForumReply" id="BizForumReplyResult">
+        <result property="replyId"    column="reply_id"    />
+        <result property="postId"    column="post_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="content"    column="content"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectBizForumReplyVo">
+        select reply_id, post_id, parent_id, user_id, content, del_flag, create_time from biz_forum_reply
+    </sql>
+
+    <select id="selectBizForumReplyList" parameterType="BizForumReply" resultMap="BizForumReplyResult">
+        <include refid="selectBizForumReplyVo"/>
+        <where>  
+            <if test="postId != null "> and post_id = #{postId}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+    
+    <select id="selectBizForumReplyByReplyId" parameterType="Long" resultMap="BizForumReplyResult">
+        <include refid="selectBizForumReplyVo"/>
+        where reply_id = #{replyId}
+    </select>
+
+    <insert id="insertBizForumReply" parameterType="BizForumReply" useGeneratedKeys="true" keyProperty="replyId">
+        insert into biz_forum_reply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="postId != null">post_id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="postId != null">#{postId},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBizForumReply" parameterType="BizForumReply">
+        update biz_forum_reply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="postId != null">post_id = #{postId},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where reply_id = #{replyId}
+    </update>
+
+    <delete id="deleteBizForumReplyByReplyId" parameterType="Long">
+        delete from biz_forum_reply where reply_id = #{replyId}
+    </delete>
+
+    <delete id="deleteBizForumReplyByReplyIds" parameterType="String">
+        delete from biz_forum_reply where reply_id in 
+        <foreach item="replyId" collection="array" open="(" separator="," close=")">
+            #{replyId}
+        </foreach>
+    </delete>
+</mapper>

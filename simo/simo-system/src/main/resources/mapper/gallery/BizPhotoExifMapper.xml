@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simo.gallery.mapper.BizPhotoExifMapper">
+    
+    <resultMap type="BizPhotoExif" id="BizPhotoExifResult">
+        <result property="photoId"    column="photo_id"    />
+        <result property="cameraMake"    column="camera_make"    />
+        <result property="cameraModel"    column="camera_model"    />
+        <result property="lensModel"    column="lens_model"    />
+        <result property="focalLength"    column="focal_length"    />
+        <result property="aperture"    column="aperture"    />
+        <result property="exposureTime"    column="exposure_time"    />
+        <result property="iso"    column="iso"    />
+        <result property="gpsLat"    column="gps_lat"    />
+        <result property="gpsLng"    column="gps_lng"    />
+        <result property="takenTime"    column="taken_time"    />
+    </resultMap>
+
+    <sql id="selectBizPhotoExifVo">
+        select photo_id, camera_make, camera_model, lens_model, focal_length, aperture, exposure_time, iso, gps_lat, gps_lng, taken_time from biz_photo_exif
+    </sql>
+
+    <select id="selectBizPhotoExifList" parameterType="BizPhotoExif" resultMap="BizPhotoExifResult">
+        <include refid="selectBizPhotoExifVo"/>
+        <where>  
+            <if test="cameraMake != null  and cameraMake != ''"> and camera_make = #{cameraMake}</if>
+            <if test="cameraModel != null  and cameraModel != ''"> and camera_model = #{cameraModel}</if>
+            <if test="lensModel != null  and lensModel != ''"> and lens_model = #{lensModel}</if>
+            <if test="focalLength != null  and focalLength != ''"> and focal_length = #{focalLength}</if>
+            <if test="aperture != null  and aperture != ''"> and aperture = #{aperture}</if>
+            <if test="exposureTime != null  and exposureTime != ''"> and exposure_time = #{exposureTime}</if>
+            <if test="iso != null  and iso != ''"> and iso = #{iso}</if>
+            <if test="gpsLat != null "> and gps_lat = #{gpsLat}</if>
+            <if test="gpsLng != null "> and gps_lng = #{gpsLng}</if>
+            <if test="takenTime != null "> and taken_time = #{takenTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBizPhotoExifByPhotoId" parameterType="Long" resultMap="BizPhotoExifResult">
+        <include refid="selectBizPhotoExifVo"/>
+        where photo_id = #{photoId}
+    </select>
+
+    <insert id="insertBizPhotoExif" parameterType="BizPhotoExif">
+        insert into biz_photo_exif
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="photoId != null">photo_id,</if>
+            <if test="cameraMake != null">camera_make,</if>
+            <if test="cameraModel != null">camera_model,</if>
+            <if test="lensModel != null">lens_model,</if>
+            <if test="focalLength != null">focal_length,</if>
+            <if test="aperture != null">aperture,</if>
+            <if test="exposureTime != null">exposure_time,</if>
+            <if test="iso != null">iso,</if>
+            <if test="gpsLat != null">gps_lat,</if>
+            <if test="gpsLng != null">gps_lng,</if>
+            <if test="takenTime != null">taken_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="photoId != null">#{photoId},</if>
+            <if test="cameraMake != null">#{cameraMake},</if>
+            <if test="cameraModel != null">#{cameraModel},</if>
+            <if test="lensModel != null">#{lensModel},</if>
+            <if test="focalLength != null">#{focalLength},</if>
+            <if test="aperture != null">#{aperture},</if>
+            <if test="exposureTime != null">#{exposureTime},</if>
+            <if test="iso != null">#{iso},</if>
+            <if test="gpsLat != null">#{gpsLat},</if>
+            <if test="gpsLng != null">#{gpsLng},</if>
+            <if test="takenTime != null">#{takenTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBizPhotoExif" parameterType="BizPhotoExif">
+        update biz_photo_exif
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cameraMake != null">camera_make = #{cameraMake},</if>
+            <if test="cameraModel != null">camera_model = #{cameraModel},</if>
+            <if test="lensModel != null">lens_model = #{lensModel},</if>
+            <if test="focalLength != null">focal_length = #{focalLength},</if>
+            <if test="aperture != null">aperture = #{aperture},</if>
+            <if test="exposureTime != null">exposure_time = #{exposureTime},</if>
+            <if test="iso != null">iso = #{iso},</if>
+            <if test="gpsLat != null">gps_lat = #{gpsLat},</if>
+            <if test="gpsLng != null">gps_lng = #{gpsLng},</if>
+            <if test="takenTime != null">taken_time = #{takenTime},</if>
+        </trim>
+        where photo_id = #{photoId}
+    </update>
+
+    <delete id="deleteBizPhotoExifByPhotoId" parameterType="Long">
+        delete from biz_photo_exif where photo_id = #{photoId}
+    </delete>
+
+    <delete id="deleteBizPhotoExifByPhotoIds" parameterType="String">
+        delete from biz_photo_exif where photo_id in 
+        <foreach item="photoId" collection="array" open="(" separator="," close=")">
+            #{photoId}
+        </foreach>
+    </delete>
+</mapper>

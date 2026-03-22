@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simo.gallery.mapper.BizPhotoTagMapper">
+    
+    <resultMap type="BizPhotoTag" id="BizPhotoTagResult">
+        <result property="photoId"    column="photo_id"    />
+        <result property="tagId"    column="tag_id"    />
+        <result property="confidence"    column="confidence"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectBizPhotoTagVo">
+        select photo_id, tag_id, confidence, create_time from biz_photo_tag
+    </sql>
+
+    <select id="selectBizPhotoTagList" parameterType="BizPhotoTag" resultMap="BizPhotoTagResult">
+        <include refid="selectBizPhotoTagVo"/>
+        <where>  
+            <if test="confidence != null "> and confidence = #{confidence}</if>
+        </where>
+    </select>
+    
+    <select id="selectBizPhotoTagByPhotoId" parameterType="Long" resultMap="BizPhotoTagResult">
+        <include refid="selectBizPhotoTagVo"/>
+        where photo_id = #{photoId}
+    </select>
+
+    <insert id="insertBizPhotoTag" parameterType="BizPhotoTag">
+        insert into biz_photo_tag
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="photoId != null">photo_id,</if>
+            <if test="tagId != null">tag_id,</if>
+            <if test="confidence != null">confidence,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="photoId != null">#{photoId},</if>
+            <if test="tagId != null">#{tagId},</if>
+            <if test="confidence != null">#{confidence},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBizPhotoTag" parameterType="BizPhotoTag">
+        update biz_photo_tag
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tagId != null">tag_id = #{tagId},</if>
+            <if test="confidence != null">confidence = #{confidence},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where photo_id = #{photoId}
+    </update>
+
+    <delete id="deleteBizPhotoTagByPhotoId" parameterType="Long">
+        delete from biz_photo_tag where photo_id = #{photoId}
+    </delete>
+
+    <delete id="deleteBizPhotoTagByPhotoIds" parameterType="String">
+        delete from biz_photo_tag where photo_id in 
+        <foreach item="photoId" collection="array" open="(" separator="," close=")">
+            #{photoId}
+        </foreach>
+    </delete>
+</mapper>
